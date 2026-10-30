@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+ckpt/
+logs/
+data/*.jsonl
+!data/*.py
+.DS_Store

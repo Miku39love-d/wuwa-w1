@@ -12,15 +12,16 @@
 
 架构：**deepseek2 同构**（MLA 低秩压缩注意力 + MoE top-2 路由 + shared expert + RoPE NEOX），GGUF 格式，llama.cpp 全系兼容。
 
-**模型下载**（Flash 已内置本仓库，Pro/Pro+ 走 GoFile）：
+**模型下载**（三个权重全在 GitHub：Flash 在仓库根目录，Pro/Pro+ 在 Release v1.0）：
 
 | 模型 | 大小 | 下载 |
 |---|---|---|
 | **w1-flash** | 73MB | 本仓库 `wuwa-w1-flash.gguf`（直下）· [GoFile](https://gofile.io/d/IywARrpQ) |
-| **w1-pro** | 191MB | [GoFile](https://gofile.io/d/ZDC68GAS) |
-| **w1-pro+** | 129MB | [GoFile](https://gofile.io/d/QJxWb5qN) |
+| **w1-pro** | 191MB | [GitHub Release v1.0](https://github.com/Miku39love-d/wuwa-w1/releases/download/v1.0/wuwa-w1-pro.gguf) · [GoFile](https://gofile.io/d/ZDC68GAS) |
+| **w1-pro+** | 129MB | [GitHub Release v1.0](https://github.com/Miku39love-d/wuwa-w1/releases/download/v1.0/wuwa-w1-proplus.gguf) · [GoFile](https://gofile.io/d/QJxWb5qN) |
 
-PyTorch 权重 / tokenizer 同见上述 GoFile 链接。
+Release 总页：https://github.com/Miku39love-d/wuwa-w1/releases/tag/v1.0
+PyTorch 权重 / tokenizer 见上述 GoFile 链接。
 
 ## 快速开始
 

@@ -61,9 +61,9 @@ w.add_block_count(cfg["num_hidden_layers"])
 w.add_feed_forward_length(cfg["moe_inter"])
 w.add_expert_feed_forward_length(cfg["moe_inter"])
 w.add_head_count(NH)
-w.add_head_count_kv(NH)  # MLA: num_key_value_heads == num_attention_heads（对齐官方 DeepSeek GGUF）
-w.add_key_length(KV_LORA + QK_ROPE)          # 112
-w.add_value_length(KV_LORA)                   # 96
+w.add_head_count_kv(1)   # 官方 conversion/deepseek.py: MLA 转为 MQA（1 组 KV），必须为 1
+w.add_key_length(KV_LORA + QK_ROPE)          # 112（官方 conversion/deepseek.py: kv_lora_rank + qk_rope_head_dim）
+w.add_value_length(KV_LORA)                   # 96（官方 conversion/deepseek.py: kv_lora_rank）
 w.add_key_length_mla(QK_NOPE + QK_ROPE)      # 32
 w.add_value_length_mla(VD)                    # 48
 w.add_q_lora_rank(cfg["q_lora_rank"])         # 192
@@ -101,7 +101,10 @@ with open(os.path.join(TOK_DIR, "merges.txt"), encoding="utf-8") as f:
         if a and b:
             merges.append(a + " " + b)
 
-w.add_tokenizer_model("bpe")
+# llama.cpp 的 vocab 加载只认枚举值：none/llama/bert/gpt2/t5/rwkv/plamo2
+# 字节级 BPE 必须写 "gpt2"（写 "bpe" 会 throw unknown tokenizer: 'bpe'）
+w.add_tokenizer_model("gpt2")
+w.add_tokenizer_pre("default")   # GPT-2 字节级 BPE 的标准 pre-tokenizer
 w.add_token_list(tokens)
 w.add_token_types(token_type)
 if merges:
@@ -142,7 +145,7 @@ def add(name, t, f32=False):
 
 # 全局
 add("token_embd.weight", sd["tok_emb.weight"])
-add("output_norm.weight", sd["norm.weight"])
+add("output_norm.weight", sd["norm.weight"], f32=True)   # 必须 F32！build_norm 里 ggml_mul 不支持 f32×f16
 add("output.weight", sd["lm_head.weight"])
 
 for i in range(cfg["num_hidden_layers"]):
